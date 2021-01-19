@@ -9,8 +9,8 @@ public class Runner {
         // Run App
             Main.main(args);
         // Close DB
-        System.out.print("Closing Database...");
-        data.DatabaseService.close();
-        System.out.println("Done.");
+            System.out.print("Closing Database...");
+            data.DatabaseService.close();
+            System.out.println("Done.");
     }
 }

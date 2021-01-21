@@ -1,0 +1,43 @@
+class Coffee {
+	{field} name : String
+    {field} conds : String[]
+    {method} String getName()
+    {method} String[] getConds()
+}
+
+class Controller {
+	...
+}
+
+class CPS {
+	{method} void receiveOrder(String coffeeName, String[] ingredients, int[] amounts)
+}
+
+CPS --> "*" Machine : machines
+
+class Machine {
+	{field} name : String
+    {method} void giveOrder(String name, String[] ingredients, int[] amounts)
+	{method} String getName()
+}
+
+class MainRunner {
+	{method} void getCoffeeList()
+	{method} void getMachineList()
+}
+
+MainRunner --> "*" Coffee : coffees
+
+interface Observer {
+	{method} giveOrder()
+}
+
+Machine --|> Observer
+
+interface Subject {
+	{method} addObserver(Observer o)
+    {method} removeObserver(Observer o)
+    {method} receiveOrder()
+}
+
+CPS --|> Subject

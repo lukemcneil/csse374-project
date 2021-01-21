@@ -10,14 +10,15 @@ class Controller {
 }
 
 class CPS {
-	{method} void receiveOrder(String coffeeName, String[] ingredients, int[] amounts)
+	{method} void processOrder(String coffeeName, String[] ingredients, int[] amounts)
+	{method} void setMachineSelectionStrategy(MachineSelectionStrategy s)
+	{method} ...
 }
 
 CPS --> "*" Machine : machines
 
 class Machine {
 	{field} name : String
-    {method} void giveOrder(String name, String[] ingredients, int[] amounts)
 	{method} String getName()
 }
 
@@ -28,16 +29,32 @@ class MainRunner {
 
 MainRunner --> "*" Coffee : coffees
 
-interface Observer {
-	{method} giveOrder()
+interface OrderObserver {
+    {method} void makeOrder(String name, String[] ingredients, int[] amounts)
 }
 
-Machine --|> Observer
+Machine ..|> OrderObserver
 
-interface Subject {
-	{method} addObserver(Observer o)
-    {method} removeObserver(Observer o)
-    {method} receiveOrder()
+interface OrderSubject {
+	{method} addOrderObserver(OrderObserver o)
+    {method} removeOrderObserver(OrderObserver o)
+    {method} processOrder()
 }
 
-CPS --|> Subject
+CPS ..|> OrderSubject
+CPS --> "1" MachineSelectionStrategy : strategy
+
+interface MachineSelectionStrategy {
+	{method} void processOrder(String coffeeName, String[] ingredients, int[] amounts)
+}
+
+class NearestCoffeeMachine {
+	{method} ...
+}
+
+class HighestRatedCoffeeMachine {
+	{method} ...
+}
+
+NearestCoffeeMachine ..|> MachineSelectionStrategy
+HighestRatedCoffeeMachine ..|> MachineSelectionStrategy

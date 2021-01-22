@@ -1,5 +1,7 @@
 package domain;
 
+import data.MachineOrderService;
+
 import java.util.Arrays;
 
 public class Machine {
@@ -28,10 +30,14 @@ public class Machine {
     }
 
     public void make(Coffee coffee) {
-        System.out.printf("INFO: Machine\"%s\" (%s) is Making a %s", machineID, location, coffee);
-        if (coffee.getCustomizations() != null) {    // TODO: Determine machine type and act accordingly.
-            System.out.printf("MACHINE DISPLAY \"%s\": Notified barista to add the following customizations: \n", Arrays.toString(coffee.getCustomizations()));
-        }
+        // TODO: Verify Machine can make specfic coffee
+        MachineOrderService.submitOrder(this, coffee);
+
+    }
+
+    public boolean canMake(Coffee coffee) {
+        // TODO: Complete.
+        return true;
     }
 
     public int getMachineID() {
@@ -48,5 +54,16 @@ public class Machine {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String toString() {
+        return "Machine{" +
+                "machineID=" + machineID +
+                ", type=" + type +
+                ", location='" + location + '\'' +
+                ", description='" + description + '\'' +
+                ", waitTime=" + waitTime +
+                '}';
     }
 }

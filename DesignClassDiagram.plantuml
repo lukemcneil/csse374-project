@@ -1,7 +1,9 @@
+@startuml
+page 2x1
+
 package domain {
   class Coffee {
       {field} name : String
-      {field} size : String
       {field} customizations : String[]
       {method} String getName()
       {method} int getSize()
@@ -44,12 +46,6 @@ package domain {
     interface IncomingOrderObserver {
     	{method} void receiveOrder(String coffeeName, Size size, String strategy)
 	}
-    
-    interface OrderSubject {
-        {method} addOrderObserver(OrderObserver o)
-        {method} removeOrderObserver(OrderObserver o)
-        void receiveOrder(String coffeeName, String size, String strategy)
-    }
     
     package machine_allocation_strategy {
     
@@ -118,6 +114,7 @@ package data {
     }
 }
 
+Coffee --> "1" Size : size
 MachineAllocationController --> "1" MachineAllocationStrategy : defaultStrategy
 MachineAllocationController --> "*" MachineAllocationStrategy : strategies
 Machine --> "1" MachineType : type
@@ -129,3 +126,5 @@ NearestStrategy ..|> MachineAllocationStrategy
 HighestRatedStrategy ..|> MachineAllocationStrategy
 LeastWaitStrategy ..|> MachineAllocationStrategy
 RandomStrategy ..|> MachineAllocationStrategy
+
+@enduml

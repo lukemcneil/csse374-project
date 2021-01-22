@@ -1,60 +1,131 @@
-class Coffee {
-	{field} name : String
-    {field} conds : String[]
-    {method} String getName()
-    {method} String[] getConds()
+package domain {
+  class Coffee {
+      {field} name : String
+      {field} size : String
+      {field} customizations : String[]
+      {method} String getName()
+      {method} int getSize()
+      {method} String[] getCustomizations()
+      {method} String toString()
+  }
+
+  class Machine {
+      {field} machineID : int
+      {field} location : String
+      {field} description : String
+      {field} waitTime : int
+      {method} void make(Coffee coffee)
+      {method} int getMachineID()
+      {method} MachineType getType()
+      {method} String getLocation()
+      {method} String getDescription()
+  }
+  
+  enum MachineType {
+  	BASIC
+    AUTOMATED
+    PROGRAMMABLE
+  }
+  
+  enum Size {
+  	SMALL
+    MEDIUM
+    LARGE
+  }
+
+  class CPS {
+      {method} void receiveOrder(String coffeeName, Size size, String strategy)
+      {method} ...
+  }
+  
+  class Controller {
+  }
+    
+    interface IncomingOrderObserver {
+    	{method} void receiveOrder(String coffeeName, Size size, String strategy)
+	}
+    
+    interface OrderSubject {
+        {method} addOrderObserver(OrderObserver o)
+        {method} removeOrderObserver(OrderObserver o)
+        void receiveOrder(String coffeeName, String size, String strategy)
+    }
+    
+    package machine_allocation_strategy {
+    
+    	class MachineAllocationController {
+        	{method} MachineAllocationStrategy getStrategy(String strategy)
+        	{method} void registerAllocationStrategy(MachineAllocationStrategy strategy)
+        	{method} ArrayList<MachineAllocationStrategy> getStrategies()
+        }
+    
+      interface MachineAllocationStrategy {
+          {method} Machine selectMachine(Coffee coffee)
+          {method} void strategyMatchesInput(String strategy)
+          {method} String getName()
+      }
+
+      class NearestStrategy {
+          {method} ...
+      }
+
+      class HighestRatedStrategy {
+          {method} ...
+      }
+
+      class LeastWaitStrategy {
+          {method} ...
+      }
+
+      class RandomStrategy {
+          {method} ...
+      }
+    }
 }
 
-class Controller {
-	...
+package presentation {
+  class MockApp {
+      {method} void run()
+  }
 }
 
-class CPS {
-	{method} void processOrder(String coffeeName, String[] ingredients, int[] amounts)
-	{method} void setMachineSelectionStrategy(MachineSelectionStrategy s)
-	{method} ...
+package data {
+	class DatabaseService {
+    	{field} connection : Connection
+        {method} void start()
+        {method} void close()
+        {method} ArrayList<Coffee> getAllCoffees()
+        {method} ArrayList<Coffee> getAllMachines()
+    }
+    
+	class IncomingOrderService {
+    	{field} connection : Connection
+        {method} void registerObserver(IncomingOrderObserver observer)
+        {method} void removeObserver(IncomingOrderObserver observer)
+        {method} int placeOrder(String coffeeName, String sizeStr, String strategy) getAllCoffees()
+    }
+    
+    class MachineOrderService {
+    }
+    
+    class MachineStatusService {
+    	{method} void receiveStatusUpdate(int machineID, String message)
+    }
+    
+    class OrderFlowInformationService {
+    	{method} ArrayList<String> getBasicMenu()
+    	{method} ArrayList<String> getBasicStrategyList()
+    }
 }
 
-CPS --> "*" Machine : machines
-
-class Machine {
-	{field} name : String
-	{method} String getName()
-}
-
-class MainRunner {
-	{method} void getCoffeeList()
-	{method} void getMachineList()
-}
-
-MainRunner --> "*" Coffee : coffees
-
-interface OrderObserver {
-    {method} void makeOrder(String name, String[] ingredients, int[] amounts)
-}
-
-Machine ..|> OrderObserver
-
-interface OrderSubject {
-	{method} addOrderObserver(OrderObserver o)
-    {method} removeOrderObserver(OrderObserver o)
-    {method} processOrder()
-}
-
-CPS ..|> OrderSubject
-CPS --> "1" MachineSelectionStrategy : strategy
-
-interface MachineSelectionStrategy {
-	{method} void processOrder(String coffeeName, String[] ingredients, int[] amounts)
-}
-
-class NearestCoffeeMachine {
-	{method} ...
-}
-
-class HighestRatedCoffeeMachine {
-	{method} ...
-}
-
-NearestCoffeeMachine ..|> MachineSelectionStrategy
-HighestRatedCoffeeMachine ..|> MachineSelectionStrategy
+MachineAllocationController --> "1" MachineAllocationStrategy : defaultStrategy
+MachineAllocationController --> "*" MachineAllocationStrategy : strategies
+Machine --> "1" MachineType : type
+IncomingOrderService --> "*" IncomingOrderObserver : observers
+MockApp --> "1" IncomingOrderService : orderService
+MockApp --> "1" OrderFlowInformationService : infoService
+CPS ..|> IncomingOrderObserver
+NearestStrategy ..|> MachineAllocationStrategy
+HighestRatedStrategy ..|> MachineAllocationStrategy
+LeastWaitStrategy ..|> MachineAllocationStrategy
+RandomStrategy ..|> MachineAllocationStrategy

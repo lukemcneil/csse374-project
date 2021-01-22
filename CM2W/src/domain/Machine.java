@@ -30,7 +30,7 @@ public class Machine {
     }
 
     public void make(Coffee coffee) {
-        // TODO: Verify Machine can make specfic coffee
+        // TODO: Verify Machine can make specific coffee
         MachineOrderService.submitOrder(this, coffee);
 
     }

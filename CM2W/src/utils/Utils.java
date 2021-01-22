@@ -1,5 +1,7 @@
 package utils;
 
+import domain.Size;
+
 public class Utils {
     public static boolean isValidSize(String size) {
         switch (size.toLowerCase()) {
@@ -9,6 +11,22 @@ public class Utils {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    public static Size getSize(String s) {
+        switch (s.toUpperCase()) {
+            case "S":
+            case "SMALL":
+                return Size.SMALL;
+            case "M":
+            case "MEDIUM":
+                return Size.MEDIUM;
+            case "L":
+            case "LARGE":
+                return Size.LARGE;
+            default:
+                throw new Error("Invalid size \"" + s + "\"");
         }
     }
 }

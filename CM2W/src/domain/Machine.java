@@ -1,27 +1,52 @@
 package domain;
 
+import java.util.Arrays;
+
 public class Machine {
 
 
-    String name;
+    private final int machineID;
+    private final MachineType type;
+    private final String location;
+    private final String description;
+    private int waitTime;
+    // TODO: any additional attributes from DB schema.
 
-    public Machine(String name) {
-        this.name = name;
+    public Machine(int machineID, MachineType type, String location, String description) {
+        this.machineID = machineID;
+        this.type = type;
+        this.location = location;
+        this.description = description;
     }
 
-    public void giveOrder(String name, String size, String[] ingredients, int[] amounts) {    // TODO: Create Ingredients class/bundle ingredient with amount instead of parallel arrays.
-        System.out.printf("INFO: Machine\"%s\" is Making a %s %s, with ingredients: \n\t\t%s\n\t\tand amounts: \n\t\t%s\n", this.name, name, size, ingredients, amounts);
-        if (ingredients != null) {    // TODO: Determine machine type and act accordingly.
-            System.out.printf("MACHINE DISPLAY \"%s\": Notified barista to add the following: \n", name);
-            for (int i = 0; i < ingredients.length; i++) {
-                System.out.println("\t\t" + ingredients[i]);
-            }
+    public Machine(int machineID, MachineType type, String location, String description, int waitTime) {
+        this.machineID = machineID;
+        this.type = type;
+        this.location = location;
+        this.description = description;
+        this.waitTime = waitTime;
+    }
+
+    public void make(Coffee coffee) {
+        System.out.printf("INFO: Machine\"%s\" (%s) is Making a %s", machineID, location, coffee);
+        if (coffee.getCustomizations() != null) {    // TODO: Determine machine type and act accordingly.
+            System.out.printf("MACHINE DISPLAY \"%s\": Notified barista to add the following customizations: \n", Arrays.toString(coffee.getCustomizations()));
         }
     }
 
-    public String getName() {
-        return name;
+    public int getMachineID() {
+        return machineID;
     }
 
+    public MachineType getType() {
+        return type;
+    }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

@@ -1,4 +1,7 @@
-package domain.machine_allocation_strategy;
+/**
+ * Strategy that selects a random machine that is capable of fulfilling the coffee order request.
+ */
+package domain.machine_allocation_strategies;
 
 import data.DatabaseService;
 import domain.Coffee;
@@ -6,14 +9,17 @@ import domain.Machine;
 
 import java.util.ArrayList;
 
-public class HighestRatedStrategy implements MachineAllocationStrategy {
-    private static final String strategyName = "HighestRated";
+public class RandomStrategy implements MachineAllocationStrategy {
+    private static final String strategyName = "Random";
 
     @Override
     public Machine selectMachine(Coffee coffee) {
         ArrayList<Machine> machines = DatabaseService.getAllMachines();
-        // TODO: Complete
-        return machines.get(0);
+        // TODO: Filter incapable machines before selection.
+
+        int selection = (int) (Math.random() * machines.size());
+
+        return machines.get(selection);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package domain.machine_allocation_strategy;
+package domain.machine_allocation_strategies;
 
 import domain.Coffee;
 import domain.Machine;

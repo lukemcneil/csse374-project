@@ -1,38 +1,19 @@
 package domain;
 
-import data.DatabaseService;
-import domain.machine_allocation_strategy.*;
+import domain.machine_allocation_strategies.MachineAllocationStrategy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import static domain.machine_allocation_strategies.MachineAllocationController.getStrategy;
 
-public class CPS {
-    // TODO: Consider splitting the strategy list (and strategy selection) into a separate class.
-    private static ArrayList<MachineAllocationStrategy> strategies = new ArrayList<>(Arrays.asList(
-            new HighestRatedStrategy(), // TODO: There's probably a better way to do this...
-            new LeastWaitStrategy(),    //  (probably by allowing the strategies to add themselves to the list instead of keeping this list up to date).
-            new NearestStrategy(),
-            new RandomStrategy()
-    ));
+public class CPS implements IncomingOrderObserver {
 
-    private static final MachineAllocationStrategy defaultStrategy = new NearestStrategy();
 
-    private static MachineAllocationStrategy getStrategy(String strategy) {
-        for (MachineAllocationStrategy s: strategies) {
-            if (s.strategyMatchesInput(strategy))
-                return s;
-        }
-
-        return defaultStrategy;
-    }
-
-    public void receiveOrder(String coffeeName, String size, String strategy) {    // TODO: (Coffee) Size as enum instead of string
+    public void receiveOrder(String coffeeName, Size size, String strategy) {    // TODO: (Coffee) Size as enum instead of string
         MachineAllocationStrategy selectedStrategy = getStrategy(strategy);
 
-        Machine machine = selectedStrategy.selectMachine(new Coffee(coffeeName, null));
+        Coffee coffee = new Coffee(coffeeName, size, null);   // TODO: Implement customizations
+        Machine machine = selectedStrategy.selectMachine(coffee);
 
-
-        machine.giveOrder(coffeeName, size, null, null);
+        machine.make(coffee);
         // TODO: Deal with ingredients...probably inside Coffee constructor.
 
 //        //int[] regularIngredients = DatabaseSystem.defaultIngredientsForCoffee(coffeeName);
@@ -60,27 +41,5 @@ public class CPS {
 //                }
 //            }
 //        }
-    }
-
-    // Consider Extracting to separate Menu Class.
-    public ArrayList<String> getBasicMenu() {
-        ArrayList<String> menu = new ArrayList<>();
-
-        for (Coffee c : DatabaseService.getAllCoffees()) {
-            menu.add(c.name);
-        }
-
-        return menu;
-    }
-
-    // TODO: See Above re extracting strategy methods to separate class.
-    public ArrayList<String> getBasicStrategyList() {
-        ArrayList<String> strategyNames = new ArrayList<>();
-
-        for (MachineAllocationStrategy s : strategies) {
-            strategyNames.add(s.getName());
-        }
-
-        return strategyNames;
     }
 }

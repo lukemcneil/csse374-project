@@ -5,35 +5,43 @@ package presentation;// Condiment <-- just details
 // domain.Controller <-- Just prints out status information
 // domain.Machine <-- Would hold data for which set the coffee would work for
 
-import domain.CPS;
+import data.IncomingOrderService;
+import data.OrderFlowInformationService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import static utils.Utils.isValidSize;
 
 public class MockApp {
-
-//	static ArrayList<Coffee> coffees = new ArrayList<Coffee>();
+    IncomingOrderService orderService;
+    OrderFlowInformationService infoService;
 
     /**
-     * An "interactive" console app to mock order submission. Presents basic menu, then submits selected coffee to
-     * specified CPS system. Reports order status back to user via console messages.
+     * Initializes an "interactive" console app to mock order submission.
      *
-     * @param cps the CPS system to direct the request to
+     * @param orderService the IncomingOrderAPI to direct the request to
+     * @param infoService  the OrderFlowInformationService to direct information requests to (ex for menu and
+     *                     strategy options)
      */
-    public void run(CPS cps) {
+    public MockApp(IncomingOrderService orderService, OrderFlowInformationService infoService) {
+        this.orderService = orderService;
+        this.infoService = infoService;
+    }
 
-//		getCoffeeList();
+    //	static ArrayList<Coffee> coffees = new ArrayList<Coffee>();
 
-//		CPS cps = new CPS(getMachineList());
+    /**
+     * Runs the basic mock app. Presents basic menu, then submits selected coffee to
+     * specified CPS system. Reports order status back to user via console messages.
+     */
+    public void run() {
 
         Scanner in = new Scanner(System.in);
 
         while (true) {
-            ArrayList<String> menu = cps.getBasicMenu();
-            System.out.printf("Hi, welcome to Flunkin's! Our menu is: %s\n", menu.toString());
+            ArrayList<String> menu = infoService.getBasicMenu();
+            System.out.printf("Hi, welcome to Flunkin's! Our menu is (type exit to exit): %s\n", menu.toString());
             System.out.print("Selection: ");
             String coffeeName = in.nextLine();
             if (coffeeName.equalsIgnoreCase("exit")) {
@@ -42,11 +50,11 @@ public class MockApp {
                 System.out.print("Please select a size (S, M, L): ");
                 String size = in.nextLine();
                 if (isValidSize(size)) {
-                    System.out.printf("Please select a machine selection strategy from %s:", cps.getBasicStrategyList());
+                    System.out.printf("Please select a machine selection strategy from %s:", infoService.getBasicStrategyList());
                     String strategy = in.nextLine();
                     System.out.printf("Placing an order for a %s %s from a/the %s machine. \n", size, coffeeName, strategy); // TODO: return strategy for this response
-                    cps.receiveOrder(coffeeName, size, strategy);        // TODO: support customization of ingredients
-                    System.out.printf("Order placed. Your order number is %d\n", 0);  // TODO: Order Number
+                    int orderNumber = orderService.placeOrder(coffeeName, size, strategy);        // TODO: support customization of ingredients
+                    System.out.printf("Order placed. Your order number is %d\n", orderNumber);
                     // TODO: Any additional returned status???
                 } else {
                     System.out.printf("Invalid size \"%s\" selected. Order not placed.\n", size);
@@ -56,19 +64,13 @@ public class MockApp {
             }
 
 
-//			System.out.println();
 //			boolean flag = false;
 //			for(int i = 0; i < coffees.size(); i++) {
 //				if(coffees.get(i).getName().toLowerCase().equals(coffeeName.toLowerCase())) {
 //					flag = true;
-//					cps.receiveOrder(coffees.get(i).getName(), coffees.get(i).getConds(), null);
+//					orderService.receiveOrder(coffees.get(i).getName(), coffees.get(i).getConds(), null);
 //				}
 //			}
-//
-//			if(!flag) {
-//				System.out.println("Could not find the Coffee Name in the System...\n");
-//			}
-
         }
 
     }

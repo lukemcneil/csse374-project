@@ -1,13 +1,15 @@
 package data;
 
+import domain.Coffee;
+import domain.Machine;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
-
-import domain.Coffee;
-import domain.Machine;
 
 // SQLite implementation based on example code at https://github.com/xerial/sqlite-jdbc
 
@@ -40,6 +42,11 @@ public class DatabaseService {
         }
     }
 
+    /**
+     * (Will) Queries the database for all known coffee options.
+     * TODO: Point at DB; Complete.
+     * @return an ArrayList of all known coffees.
+     */
     public static ArrayList<Coffee> getAllCoffees() {
         ArrayList<Coffee> coffees = new ArrayList<Coffee>();
 
@@ -63,12 +70,12 @@ public class DatabaseService {
                     }
                 }
 
-                String[] ingrds = new String[vals.size() - 1];
-                for (int i = 0; i < ingrds.length; i++) {
-                    ingrds[i] = vals.get(i + 1);
+                String[] ingredients = new String[vals.size() - 1];
+                for (int i = 0; i < ingredients.length; i++) {
+                    ingredients[i] = vals.get(i + 1);
                 }
 
-                Coffee newCoff = new Coffee(vals.get(0), ingrds);
+                Coffee newCoff = new Coffee(vals.get(0),null,  ingredients);
                 coffees.add(newCoff);
                 // read next line
                 line = reader.readLine();
@@ -81,6 +88,11 @@ public class DatabaseService {
         return coffees;
     }
 
+    /**
+     * (Will) Queries the database for all machines and their info.
+     * @return an ArrayList of all machines & their details.
+     * TODO: Point at DB; Complete.
+     */
     public static ArrayList<Machine> getAllMachines() {
         ArrayList<Machine> machines = new ArrayList<Machine>();
 
@@ -89,8 +101,8 @@ public class DatabaseService {
             reader = new BufferedReader(new FileReader("./src/data/MachineList.txt"));
             String line = reader.readLine();
             while (line != null) {
-                Machine newMach = new Machine(line);
-                machines.add(newMach);
+                Machine machine = new Machine(0, null, line, null);
+                machines.add(machine);
                 // read next line
                 line = reader.readLine();
             }

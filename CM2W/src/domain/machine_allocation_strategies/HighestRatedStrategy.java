@@ -1,4 +1,4 @@
-package domain.machine_allocation_strategy;
+package domain.machine_allocation_strategies;
 
 import data.DatabaseService;
 import domain.Coffee;
@@ -6,8 +6,8 @@ import domain.Machine;
 
 import java.util.ArrayList;
 
-public class NearestStrategy implements MachineAllocationStrategy {
-    private static final String strategyName = "Nearest";
+public class HighestRatedStrategy implements MachineAllocationStrategy {
+    private static final String strategyName = "HighestRated";
 
     @Override
     public Machine selectMachine(Coffee coffee) {

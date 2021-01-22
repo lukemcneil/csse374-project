@@ -1,21 +1,33 @@
 package domain;
 
+import java.util.Arrays;
+
 public class Coffee {
 
-    String name;
-    String[] conds;
+    private final String name;
+    private final Size size;
+    private final String[] customizations;    // TODO: Better datatype for customizations, probably object/array of objects.
 
-    public Coffee(String name, String[] condiments) {
+    public Coffee(String name, Size size, String[] customizations) {
         this.name = name;
-        this.conds = condiments;
+        this.size = size;
+        this.customizations = customizations;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
-    public String[] getConds() {
-        return this.conds;
+    public Size getSize() {
+        return size;
     }
 
+    public String[] getCustomizations() {
+        return customizations;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s, with customizations: %s", size, name, Arrays.toString(customizations));
+    }
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CPS {
+    // TODO: Consider splitting the strategy list (and strategy selection) into a separate class.
     private static ArrayList<MachineAllocationStrategy> strategies = new ArrayList<>(Arrays.asList(
             new HighestRatedStrategy(), // TODO: There's probably a better way to do this...
             new LeastWaitStrategy(),    //  (probably by allowing the strategies to add themselves to the list instead of keeping this list up to date).
@@ -59,10 +60,9 @@ public class CPS {
 //                }
 //            }
 //        }
-
-
     }
 
+    // Consider Extracting to separate Menu Class.
     public ArrayList<String> getBasicMenu() {
         ArrayList<String> menu = new ArrayList<>();
 
@@ -73,6 +73,7 @@ public class CPS {
         return menu;
     }
 
+    // TODO: See Above re extracting strategy methods to separate class.
     public ArrayList<String> getBasicStrategyList() {
         ArrayList<String> strategyNames = new ArrayList<>();
 
@@ -82,6 +83,4 @@ public class CPS {
 
         return strategyNames;
     }
-
-
 }

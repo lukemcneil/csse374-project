@@ -42,8 +42,10 @@ public class MockApp {
                 System.out.print("Please select a size (S, M, L): ");
                 String size = in.nextLine();
                 if (isValidSize(size)) {
-                    System.out.printf("Placing an order for a %s %s. \n", size, coffeeName);
-                    cps.receiveOrder(coffeeName, size);        // TODO: support customization of ingredients
+                    System.out.printf("Please select a machine selection strategy from %s:", cps.getBasicStrategyList());
+                    String strategy = in.nextLine();
+                    System.out.printf("Placing an order for a %s %s from a/the %s machine. \n", size, coffeeName, strategy); // TODO: return strategy for this response
+                    cps.receiveOrder(coffeeName, size, strategy);        // TODO: support customization of ingredients
                     System.out.printf("Order placed. Your order number is %d\n", 0);  // TODO: Order Number
                     // TODO: Any additional returned status???
                 } else {

@@ -1,16 +1,39 @@
 package domain;
 
 import data.DatabaseService;
-import domain.Machine;
+import domain.machine_allocation_strategy.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CPS {
-    public CPS() {
+    private static ArrayList<MachineAllocationStrategy> strategies = new ArrayList<>(Arrays.asList(
+            new HighestRatedStrategy(), // TODO: There's probably a better way to do this...
+            new LeastWaitStrategy(),    //  (probably by allowing the strategies to add themselves to the list instead of keeping this list up to date).
+            new NearestStrategy(),
+            new RandomStrategy()
+    ));
+
+    private static final MachineAllocationStrategy defaultStrategy = new NearestStrategy();
+
+    private static MachineAllocationStrategy getStrategy(String strategy) {
+        for (MachineAllocationStrategy s: strategies) {
+            if (s.strategyMatchesInput(strategy))
+                return s;
+        }
+
+        return defaultStrategy;
     }
 
+    public void receiveOrder(String coffeeName, String size, String strategy) {    // TODO: (Coffee) Size as enum instead of string
+        MachineAllocationStrategy selectedStrategy = getStrategy(strategy);
 
-    public void receiveOrder(String coffeeName, String size) {    // TODO: Size as enum instead of string
+        Machine machine = selectedStrategy.selectMachine(new Coffee(coffeeName, null));
+
+
+        machine.giveOrder(coffeeName, size, null, null);
+        // TODO: Deal with ingredients...probably inside Coffee constructor.
+
 //        //int[] regularIngredients = DatabaseSystem.defaultIngredientsForCoffee(coffeeName);
 //        int[] regularIngredients = new int[10]; // just for use while the other one is commented out
 //
@@ -37,12 +60,7 @@ public class CPS {
 //            }
 //        }
 
-        ArrayList<Machine> machines = DatabaseService.getAllMachines();
 
-        machines.get(0).giveOrder(coffeeName, size, null, null);
-        // TODO: Pass ingredients...
-        // TODO: Select Machine via strategy pattern
-        // TODO: Literally the entire method...
     }
 
     public ArrayList<String> getBasicMenu() {
@@ -53,6 +71,16 @@ public class CPS {
         }
 
         return menu;
+    }
+
+    public ArrayList<String> getBasicStrategyList() {
+        ArrayList<String> strategyNames = new ArrayList<>();
+
+        for (MachineAllocationStrategy s : strategies) {
+            strategyNames.add(s.getName());
+        }
+
+        return strategyNames;
     }
 
 

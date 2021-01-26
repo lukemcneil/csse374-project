@@ -6,12 +6,10 @@ import domain.Machine;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
-// SQLite implementation based on example code at https://github.com/xerial/sqlite-jdbc
+// SQLite usage based on example code at https://github.com/xerial/sqlite-jdbc
 
 public class DatabaseService {
     //TODO: determine static vs instantiated DB Service, esp w/ regards to SQLite connection.
@@ -23,13 +21,6 @@ public class DatabaseService {
                 connection = DriverManager.getConnection("jdbc:sqlite:cm2w.db");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-        } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
         }
     }
 
@@ -50,40 +41,66 @@ public class DatabaseService {
     public static ArrayList<Coffee> getAllCoffees() {
         ArrayList<Coffee> coffees = new ArrayList<Coffee>();
 
-        BufferedReader reader;
+        try
+        {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-        try {
-            reader = new BufferedReader(new FileReader("./src/data/CoffeeList.txt"));
-            String line = reader.readLine();
-            while (line != null) {
-                ArrayList<String> vals = new ArrayList<String>();
-                int start = 0;
-                int end = 0;
-                while (start < line.length()) {
-                    if (end == line.length() || line.charAt(end) == ' ') {
-                        String s = line.substring(start, end);
-                        start = end + 1;
-                        end++;
-                        vals.add(s);
-                    } else {
-                        end++;
-                    }
-                }
+            ResultSet drinkTypeRS = statement.executeQuery("SELECT DrinkName, Description from DrinkType");
+            while(drinkTypeRS.next())
+            {
+                Coffee coffee = new Coffee(
+                        drinkTypeRS.getString("DrinkName"),
+                        null,
+                        drinkTypeRS.getString("Description"),
+                        null    // TODO: should ingredients remain separate from customizations? (ie should
+                                             //     we include ingredients in Coffee separately from customizations?
+                );
 
-                String[] ingredients = new String[vals.size() - 1];
-                for (int i = 0; i < ingredients.length; i++) {
-                    ingredients[i] = vals.get(i + 1);
-                }
-
-                Coffee newCoff = new Coffee(vals.get(0),null,  ingredients);
-                coffees.add(newCoff);
-                // read next line
-                line = reader.readLine();
+                coffees.add(coffee);
             }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+
+
+//        BufferedReader reader;
+//
+//        try {
+//            reader = new BufferedReader(new FileReader("./src/data/CoffeeList.txt"));
+//            String line = reader.readLine();
+//            while (line != null) {
+//                ArrayList<String> vals = new ArrayList<String>();
+//                int start = 0;
+//                int end = 0;
+//                while (start < line.length()) {
+//                    if (end == line.length() || line.charAt(end) == ' ') {
+//                        String s = line.substring(start, end);
+//                        start = end + 1;
+//                        end++;
+//                        vals.add(s);
+//                    } else {
+//                        end++;
+//                    }
+//                }
+//
+//                String[] ingredients = new String[vals.size() - 1];
+//                for (int i = 0; i < ingredients.length; i++) {
+//                    ingredients[i] = vals.get(i + 1);
+//                }
+//
+//                Coffee newCoff = new Coffee(vals.get(0),null,  ingredients);
+//                coffees.add(newCoff);
+//                // read next line
+//                line = reader.readLine();
+//            }
+//            reader.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         return coffees;
     }

@@ -10,7 +10,7 @@ public class CPS implements IncomingOrderObserver {
     public void receiveOrder(String coffeeName, Size size, String strategy) {    // TODO: (Coffee) Size as enum instead of string
         MachineAllocationStrategy selectedStrategy = getStrategy(strategy);
 
-        Coffee coffee = new Coffee(coffeeName, size, null);   // TODO: Implement customizations
+        Coffee coffee = new Coffee(coffeeName, size, null, null);   // TODO: Implement customizations
         Machine machine = selectedStrategy.selectMachine(coffee);
 
         machine.make(coffee);

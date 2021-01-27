@@ -106,22 +106,7 @@ public class DatabaseService {
         {
             System.err.println(e.getMessage());
         }
-
-//        BufferedReader reader;
-//        try {
-//            reader = new BufferedReader(new FileReader("./src/data/MachineList.txt"));
-//            String line = reader.readLine();
-//            while (line != null) {
-//                Machine machine = new Machine(0, null, line, null);
-//                machines.add(machine);
-//                // read next line
-//                line = reader.readLine();
-//            }
-//            reader.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
+        
         return machines;
     }
 

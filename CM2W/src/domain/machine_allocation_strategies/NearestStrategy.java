@@ -12,7 +12,6 @@ public class NearestStrategy implements MachineAllocationStrategy {
     @Override
     public Machine selectMachine(Coffee coffee) {
         ArrayList<Machine> machines = DatabaseService.getAllMachines();
-        System.out.println(machines);
         // TODO: Complete
         return machines.get(0);
     }

@@ -106,7 +106,7 @@ public class DatabaseService {
         {
             System.err.println(e.getMessage());
         }
-        
+
         return machines;
     }
 

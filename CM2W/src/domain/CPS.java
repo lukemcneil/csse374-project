@@ -6,14 +6,26 @@ import static domain.machine_allocation_strategies.MachineAllocationController.g
 
 public class CPS implements IncomingOrderObserver {
 
+    private int currentOrderID = 0;
 
-    public void receiveOrder(String coffeeName, Size size, String strategy) {    // TODO: (Coffee) Size as enum instead of string
+    public int receiveOrder(String coffeeName, Size size, String strategy) {    // TODO: (Coffee) Size as enum instead of string
         MachineAllocationStrategy selectedStrategy = getStrategy(strategy);
 
         Coffee coffee = new Coffee(coffeeName, size, null, null);   // TODO: Implement customizations
         Machine machine = selectedStrategy.selectMachine(coffee);
 
-        machine.make(coffee);
+        String result;
+        if (machine != null) {
+            result = machine.make(coffee);
+            if (result.equals("MACHINE-RESPONSE: failure")) {
+                return -1;
+            }
+            else {
+                return currentOrderID++;
+            }
+        } else
+            return -2;
+
         // TODO: Deal with ingredients...probably inside Coffee constructor.
 
 //        //int[] regularIngredients = DatabaseSystem.defaultIngredientsForCoffee(coffeeName);

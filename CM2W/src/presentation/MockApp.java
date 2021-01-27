@@ -7,6 +7,7 @@ package presentation;// Condiment <-- just details
 
 import data.IncomingOrderService;
 import data.OrderFlowInformationService;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -53,8 +54,12 @@ public class MockApp {
                     System.out.printf("Please select a machine selection strategy from %s:", infoService.getBasicStrategyList());
                     String strategy = in.nextLine();
                     System.out.printf("Placing an order for a %s %s from a/the %s machine. \n", size, coffeeName, strategy); // TODO: return strategy for this response
-                    int orderNumber = orderService.placeOrder(coffeeName, size, strategy);        // TODO: support customization of ingredients, consider copying menu option & returning with modified ingredients list and added size.
-                    System.out.printf("Order placed. Your order number is %d\n", orderNumber);
+                    int orderNumber = orderService.placeOrder(coffeeName, size, strategy); // TODO: support customization of ingredients, consider copying menu option & returning with modified ingredients list and added size.
+                    if (orderNumber < 0) {
+                        Utils.printError(orderNumber);
+                    } else {
+                        System.out.printf("Order placed. Your order number is %d\n", orderNumber);
+                    }
                     // TODO: Any additional returned status???
                 } else {
                     System.out.printf("Invalid size \"%s\" selected. Order not placed.\n", size);

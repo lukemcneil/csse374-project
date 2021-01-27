@@ -2,8 +2,6 @@ package domain;
 
 import data.MachineOrderService;
 
-import java.util.Arrays;
-
 public class Machine {
 
 
@@ -29,14 +27,15 @@ public class Machine {
         this.waitTime = waitTime;
     }
 
-    public void make(Coffee coffee) {
+    public String make(Coffee coffee) {
         // TODO: Verify Machine can make specific coffee
-        MachineOrderService.submitOrder(this, coffee);
-
+        return MachineOrderService.submitOrder(this, coffee);
     }
 
     public boolean canMake(Coffee coffee) {
         // TODO: Complete.
+//        return false;
+//        return Math.random() < .5;
         return true;
     }
 

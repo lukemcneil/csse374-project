@@ -43,4 +43,18 @@ public class Utils {
                 throw new Error("Invalid machine type \"" + s + "\"");
         }
     }
+
+    public static void printError(int orderID) {
+        switch (orderID) {
+            case -1:
+                System.out.println("ERROR: Machine did not respond");
+                return;
+            case -2:
+                System.out.println("ERROR: No machine could be found to fulfill this order");
+                return;
+            case -3:
+                System.out.println("ERROR: CPS does not have any machine observers");
+                return;
+        }
+    }
 }

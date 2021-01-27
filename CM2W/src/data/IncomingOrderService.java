@@ -23,10 +23,11 @@ public class IncomingOrderService {
     }
 
     public int placeOrder(String coffeeName, String sizeStr, String strategy) {
+        int orderID = -3;
         for (IncomingOrderObserver observer : observers) {
             Size size = getSize(sizeStr);
-            observer.receiveOrder(coffeeName, size, strategy);
+            orderID = observer.receiveOrder(coffeeName, size, strategy);
         }
-        return 0; // TODO: return order number, probably from a specific observer originally from DB insert??)
+        return orderID; // TODO: return order number, probably from a specific observer originally from DB insert??)
     }
 }

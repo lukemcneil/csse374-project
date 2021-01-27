@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
+import static utils.Utils.getMachineType;
+
 // SQLite usage based on example code at https://github.com/xerial/sqlite-jdbc
 
 public class DatabaseService {
@@ -46,7 +48,7 @@ public class DatabaseService {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            ResultSet drinkTypeRS = statement.executeQuery("SELECT DrinkName, Description from DrinkType");
+            ResultSet drinkTypeRS = statement.executeQuery("SELECT DrinkName, Description FROM DrinkType");
             while(drinkTypeRS.next())
             {
                 Coffee coffee = new Coffee(
@@ -65,43 +67,6 @@ public class DatabaseService {
             System.err.println(e.getMessage());
         }
 
-
-
-//        BufferedReader reader;
-//
-//        try {
-//            reader = new BufferedReader(new FileReader("./src/data/CoffeeList.txt"));
-//            String line = reader.readLine();
-//            while (line != null) {
-//                ArrayList<String> vals = new ArrayList<String>();
-//                int start = 0;
-//                int end = 0;
-//                while (start < line.length()) {
-//                    if (end == line.length() || line.charAt(end) == ' ') {
-//                        String s = line.substring(start, end);
-//                        start = end + 1;
-//                        end++;
-//                        vals.add(s);
-//                    } else {
-//                        end++;
-//                    }
-//                }
-//
-//                String[] ingredients = new String[vals.size() - 1];
-//                for (int i = 0; i < ingredients.length; i++) {
-//                    ingredients[i] = vals.get(i + 1);
-//                }
-//
-//                Coffee newCoff = new Coffee(vals.get(0),null,  ingredients);
-//                coffees.add(newCoff);
-//                // read next line
-//                line = reader.readLine();
-//            }
-//            reader.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         return coffees;
     }
 
@@ -113,20 +78,49 @@ public class DatabaseService {
     public static ArrayList<Machine> getAllMachines() {
         ArrayList<Machine> machines = new ArrayList<Machine>();
 
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader("./src/data/MachineList.txt"));
-            String line = reader.readLine();
-            while (line != null) {
-                Machine machine = new Machine(0, null, line, null);
+        try
+        {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+            ResultSet machineRS = statement.executeQuery(
+                    "SELECT MachineID, Capability, Description, Street_Address, ZIP_code " +
+                            "FROM CoffeeMaker " +
+                            "JOIN CoffeeMakerCapability " +
+                            "ON MachineID = Coffeemaker " +
+                            "JOIN Controller " +
+                            "ON Controller = ControllerID");
+            while(machineRS.next())
+            {
+                Machine machine = new Machine(
+                        machineRS.getInt("MachineID"),
+                        getMachineType(machineRS.getString("Capability")),
+                        machineRS.getString("Street_Address") + ", " + machineRS.getString("ZIP_code"),
+                        machineRS.getString("Description")
+                );
+
                 machines.add(machine);
-                // read next line
-                line = reader.readLine();
             }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+//        BufferedReader reader;
+//        try {
+//            reader = new BufferedReader(new FileReader("./src/data/MachineList.txt"));
+//            String line = reader.readLine();
+//            while (line != null) {
+//                Machine machine = new Machine(0, null, line, null);
+//                machines.add(machine);
+//                // read next line
+//                line = reader.readLine();
+//            }
+//            reader.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         return machines;
     }

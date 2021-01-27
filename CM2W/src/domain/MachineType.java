@@ -1,7 +1,7 @@
 package domain;
 
 public enum MachineType {
-    BASIC,
+    SIMPLE,
     AUTOMATED,
     PROGRAMMABLE
 }

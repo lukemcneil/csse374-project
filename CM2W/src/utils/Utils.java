@@ -1,5 +1,6 @@
 package utils;
 
+import domain.MachineType;
 import domain.Size;
 
 public class Utils {
@@ -27,6 +28,19 @@ public class Utils {
                 return Size.LARGE;
             default:
                 throw new Error("Invalid size \"" + s + "\"");
+        }
+    }
+
+    public static MachineType getMachineType(String s) {
+        switch (s.toUpperCase()) {
+            case "SIMPLE": case "BASIC":
+                return MachineType.SIMPLE;
+            case "AUTOMATED":
+                return MachineType.AUTOMATED;
+            case "PROGRAMMABLE":
+                return MachineType.PROGRAMMABLE;
+            default:
+                throw new Error("Invalid machine type \"" + s + "\"");
         }
     }
 }

@@ -7,8 +7,10 @@ package presentation;// Condiment <-- just details
 
 import data.IncomingOrderService;
 import data.OrderFlowInformationService;
+import domain.Condiment;
 import utils.Utils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -40,7 +42,10 @@ public class MockApp {
 
         Scanner in = new Scanner(System.in);
 
+
         while (true) {
+            Condiment[] condiments = {new Condiment("Cream", "Dairy based individual serving"), new Condiment("Sugar", "Case sugar teaspoon"), new Condiment("NutraSweet", "Individual serving")};
+            ArrayList<Condiment> addedCondiments = new ArrayList<>();
             ArrayList<String> menu = infoService.getBasicMenu();
             System.out.printf("Hi, welcome to Flunkin's! Our menu is (type exit to exit): %s\n", menu.toString());
             System.out.print("Selection: ");
@@ -53,7 +58,14 @@ public class MockApp {
                 if (isValidSize(size)) {
                     System.out.printf("Please select a machine selection strategy from %s:", infoService.getBasicStrategyList());
                     String strategy = in.nextLine();
-                    System.out.printf("Placing an order for a %s %s from a/the %s machine. \n", size, coffeeName, strategy); // TODO: return strategy for this response
+                    for(Condiment condiment : condiments) {
+                        System.out.println("Would you like "+condiment.getName() + "? (Y or N)");
+                        String answer = in.nextLine();
+                        if (answer.equalsIgnoreCase("Y")) {
+                            addedCondiments.add(condiment);
+                        }
+                    }
+                    System.out.printf("Placing an order for a %s %s with %s from a/the %s machine. \n", size, coffeeName, addedCondiments, strategy); // TODO: return strategy for this response
                     int orderNumber = orderService.placeOrder(coffeeName, size, strategy); // TODO: support customization of ingredients, consider copying menu option & returning with modified ingredients list and added size.
                     if (orderNumber < 0) {
                         Utils.printError(orderNumber);

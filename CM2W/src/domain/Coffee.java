@@ -8,13 +8,16 @@ public class Coffee {
     private final Size size;
     private final String description;
 
-    private final String[] customizations;    // TODO: Better datatype for customizations, probably object/array of objects.
+    private Condiment[] addedCondiments;
 
-    public Coffee(String name, Size size, String description, String[] customizations) {
+//    private final String[] customizations;    // TODO: Better datatype for customizations, probably object/array of objects.
+
+    public Coffee(String name, Size size, String description, Condiment[] addedCondiments) {
         this.name = name;
         this.size = size;
         this.description = description;
-        this.customizations = customizations;
+        this.addedCondiments = addedCondiments;
+//        this.customizations = customizations;
     }
 
     public String getDescription() {
@@ -29,12 +32,12 @@ public class Coffee {
         return size;
     }
 
-    public String[] getCustomizations() {
-        return customizations;
+    public Condiment[] getAddedCondiments() {
+        return addedCondiments;
     }
 
     @Override
     public String toString() {
-        return String.format("%s %s, with customizations: %s", size, name, Arrays.toString(customizations));
+        return String.format("%s %s, with customizations: %s", size, name, Arrays.toString(addedCondiments));
     }
 }

@@ -23,9 +23,9 @@ public class MachineOrderService {
                 // Imitate the barista notification on the coffee machine.
                 // TODO: Verify this is the correct filtering for barista notification (does programmable ever need it? does
                 //  automated ever NOT need it?).
-                if (machine.getType() != MachineType.PROGRAMMABLE && coffee.getCustomizations() != null) {
+                if (machine.getType() != MachineType.PROGRAMMABLE && coffee.getAddedCondiments() != null) {
                     System.out.printf("\tMACHINE DISPLAY \"%s\": Notified barista to add the following customizations: %s\n", machine.getMachineID(),
-                            Arrays.toString(coffee.getCustomizations()));
+                            Arrays.toString(coffee.getAddedCondiments()));
                 }
                 return status;
             }

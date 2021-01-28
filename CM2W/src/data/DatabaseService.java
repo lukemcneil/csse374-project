@@ -2,7 +2,9 @@ package data;
 
 import domain.Coffee;
 import domain.Machine;
+import testing.MachineThatCannotMakeCoffee;
 
+import javax.crypto.Mac;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,7 +22,7 @@ public class DatabaseService {
     public static void start() {
         try {
             if (connection == null)
-                connection = DriverManager.getConnection("jdbc:sqlite:cm2w.db");
+                connection = DriverManager.getConnection("jdbc:sqlite:/home/luke/csse374/csse374-project/CM2W/cm2w.db");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -107,6 +109,39 @@ public class DatabaseService {
             System.err.println(e.getMessage());
         }
 
+        return machines;
+    }
+
+    public static ArrayList<Machine> getAllMachinesThatCannotMakeCoffee() {
+        ArrayList<Machine> machines = new ArrayList<Machine>();
+        try
+        {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+            ResultSet machineRS = statement.executeQuery(
+                    "SELECT MachineID, Capability, Description, Street_Address, ZIP_code " +
+                            "FROM CoffeeMaker " +
+                            "JOIN CoffeeMakerCapability " +
+                            "ON MachineID = Coffeemaker " +
+                            "JOIN Controller " +
+                            "ON Controller = ControllerID");
+            while(machineRS.next())
+            {
+                MachineThatCannotMakeCoffee machine = new MachineThatCannotMakeCoffee(
+                        machineRS.getInt("MachineID"),
+                        getMachineType(machineRS.getString("Capability")),
+                        machineRS.getString("Street_Address") + ", " + machineRS.getString("ZIP_code"),
+                        machineRS.getString("Description")
+                );
+
+                machines.add(machine);
+            }
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
         return machines;
     }
 

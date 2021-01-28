@@ -3,13 +3,11 @@ package domain;
 import data.MachineOrderService;
 
 public class Machine {
-
-
-    private final int machineID;
-    private final MachineType type;
-    private final String location;
-    private final String description;
-    private int waitTime;
+    protected final int machineID;
+    protected final MachineType type;
+    protected final String location;
+    protected final String description;
+    protected int waitTime;
     // TODO: any additional attributes from DB schema.
 
     public Machine(int machineID, MachineType type, String location, String description) {
@@ -33,9 +31,6 @@ public class Machine {
     }
 
     public boolean canMake(Coffee coffee) {
-        // TODO: Complete.
-//        return false;
-//        return Math.random() < .5;
         return true;
     }
 

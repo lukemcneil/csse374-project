@@ -1,5 +1,8 @@
 package domain.machine_allocation_strategies;
 
+import testing.MachineThatCannotMakeCoffeeStrategy;
+import testing.NoMachineStrategy;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,7 +15,9 @@ public class MachineAllocationController {
             new HighestRatedStrategy(), // TODO: There's probably a better way to do this...
             new LeastWaitStrategy(),    //  (probably by allowing the strategies to add themselves to the list instead of keeping this list up to date).
             new NearestStrategy(),
-            new RandomStrategy()
+            new RandomStrategy(),
+            new MachineThatCannotMakeCoffeeStrategy(),
+            new NoMachineStrategy()
     ));
 
     private static final MachineAllocationStrategy defaultStrategy = new NearestStrategy();

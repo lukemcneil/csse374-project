@@ -11,7 +11,7 @@ public class HighestRatedStrategy implements MachineAllocationStrategy {
 
     @Override
     public Machine selectMachine(Coffee coffee) {
-        ArrayList<Machine> machines = DatabaseService.getAllMachines();
+        ArrayList<Machine> machines = DatabaseService.getAllMachinesThatCanMake(coffee);
         // TODO: Complete
         return machines.get(0);
     }

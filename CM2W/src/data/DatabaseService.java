@@ -22,7 +22,7 @@ public class DatabaseService {
     public static void start() {
         try {
             if (connection == null)
-                connection = DriverManager.getConnection("jdbc:sqlite:/home/luke/csse374/csse374-project/CM2W/cm2w.db");
+                connection = DriverManager.getConnection("jdbc:sqlite:cm2w.db");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -43,7 +43,7 @@ public class DatabaseService {
      * @return an ArrayList of all known coffees.
      */
     public static ArrayList<Coffee> getAllCoffees() {
-        ArrayList<Coffee> coffees = new ArrayList<Coffee>();
+        ArrayList<Coffee> coffees = new ArrayList<>();
 
         try
         {
@@ -92,6 +92,49 @@ public class DatabaseService {
                             "ON MachineID = Coffeemaker " +
                             "JOIN Controller " +
                             "ON Controller = ControllerID");
+            while(machineRS.next())
+            {
+                Machine machine = new Machine(
+                        machineRS.getInt("MachineID"),
+                        getMachineType(machineRS.getString("Capability")),
+                        machineRS.getString("Street_Address") + ", " + machineRS.getString("ZIP_code"),
+                        machineRS.getString("Description")
+                );
+
+                machines.add(machine);
+            }
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+        return machines;
+    }
+
+    /**
+     * (Will) Queries the database for machines that are capable of making a specific coffee
+     * @return an ArrayList of all machines & their details.
+     * TODO: Point at DB; Complete.
+     */
+    public static ArrayList<Machine> getAllMachinesThatCanMake(Coffee coffee) {
+        ArrayList<Machine> machines = new ArrayList<Machine>();
+
+        try
+        {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+            ResultSet machineRS = statement.executeQuery(
+                    "SELECT MachineID, Capability, Description, Street_Address, ZIP_code " +
+                            "FROM CoffeeMaker CM " +
+                            "JOIN CoffeeMakerCapability CMC " +
+                            "ON MachineID = CMC.Coffeemaker " +
+                            "JOIN Controller " +
+                            "ON Controller = ControllerID " +
+                            "JOIN CoffeeMakerDrink CMD " +
+                            "ON CM.MachineID = CMD.Coffeemaker " +
+                            "WHERE CMD.Drinktype = '" + coffee.getName() + "'");   // TODO: Prepared statement (to avoid SQL injection)
             while(machineRS.next())
             {
                 Machine machine = new Machine(

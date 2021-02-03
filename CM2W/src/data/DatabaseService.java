@@ -2,6 +2,7 @@ package data;
 
 import domain.Coffee;
 import domain.Machine;
+import domain.actions.Recipe;
 import testing.MachineThatCannotMakeCoffee;
 
 import javax.crypto.Mac;
@@ -186,6 +187,44 @@ public class DatabaseService {
             System.err.println(e.getMessage());
         }
         return machines;
+    }
+
+    public static Recipe getRecipe(String coffeeName) {
+        Recipe recipe = new Recipe();
+        try
+        {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+            ResultSet recipeRS = statement.executeQuery(
+                    "SELECT  " +
+                            "FROM CoffeeMaker " +
+                            "JOIN CoffeeMakerCapability " +
+                            "ON MachineID = Coffeemaker " +
+                            "JOIN Controller " +
+                            "ON Controller = ControllerID");
+            while(machineRS.next())
+            {
+                MachineThatCannotMakeCoffee machine = new MachineThatCannotMakeCoffee(
+                        machineRS.getInt("MachineID"),
+                        getMachineType(machineRS.getString("Capability")),
+                        machineRS.getString("Street_Address") + ", " + machineRS.getString("ZIP_code"),
+                        machineRS.getString("Description")
+                );
+
+                machines.add(machine);
+            }
+        }
+        catch(SQLException e)
+        {
+            System.err.println(e.getMessage());
+        }
+        return machines;
+
+
+
+        if ()
+        return null;
     }
 
 

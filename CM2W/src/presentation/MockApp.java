@@ -44,8 +44,15 @@ public class MockApp {
 
 
         while (true) {
-            Condiment[] condiments = {new Condiment("Cream", "Dairy based individual serving"), new Condiment("Sugar", "Case sugar teaspoon"), new Condiment("NutraSweet", "Individual serving")};
+            // TODO: Pull this from DB
+            Condiment[] condiments = {
+                    new Condiment("Cream", "Dairy based individual serving"),
+                    new Condiment("Sugar", "Case sugar teaspoon"),
+                    new Condiment("NutraSweet", "Individual serving")
+            };
             ArrayList<Condiment> addedCondiments = new ArrayList<>();
+
+
             ArrayList<String> menu = infoService.getBasicMenu();
             System.out.printf("Hi, welcome to Flunkin's! Our menu is (type exit to exit): %s\n", menu.toString());
             System.out.print("Selection: ");
@@ -53,6 +60,12 @@ public class MockApp {
             if (coffeeName.equalsIgnoreCase("exit")) {
                 return;
             } else if (menu.contains(coffeeName)) {
+                // TODO: If coffee has a recipe, prompt for customizations.
+
+
+
+
+                // Select Size
                 System.out.print("Please select a size (S, M, L): ");
                 String size = in.nextLine();
                 if (isValidSize(size)) {

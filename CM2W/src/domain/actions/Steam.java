@@ -1,6 +1,8 @@
 package domain.actions;
 
-import domain.DrinkCommand;
+import domain.machine_commands.AddIngredientCommand;
+import domain.machine_commands.DrinkCommand;
+import domain.machine_commands.SteamCommand;
 
 import java.util.List;
 
@@ -12,8 +14,8 @@ public class Steam extends Recipe {
 
     @Override
     public List<DrinkCommand> produce() {
-        // TODO: Steam
-        wrapped.produce();
-        return null;
+        List<DrinkCommand> commands =  wrapped.produce();
+        commands.add(new SteamCommand());
+        return commands;
     }
 }

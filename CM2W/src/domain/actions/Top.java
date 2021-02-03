@@ -1,19 +1,24 @@
 package domain.actions;
 
-import domain.DrinkCommand;
+import domain.Ingredient;
+import domain.machine_commands.AddIngredientCommand;
+import domain.machine_commands.DrinkCommand;
+import domain.machine_commands.TopCommand;
 
 import java.util.List;
 
 public class Top extends Recipe {
     private Recipe wrapped;
+    private Ingredient ingredient;
 
-    public Top() {
+    public Top(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     @Override
     public List<DrinkCommand> produce() {
-        // TODO: Steam
-        wrapped.produce();
-        return null;
+        List<DrinkCommand> commands =  wrapped.produce();
+        commands.add(new TopCommand(ingredient));
+        return commands;
     }
 }

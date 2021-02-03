@@ -1,8 +1,9 @@
 package domain.actions;
 
-import domain.DrinkCommand;
-import domain.Ingredient;
+import domain.machine_commands.DrinkCommand;
+import domain.machine_commands.MixCommand;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Mix extends Recipe {
@@ -14,8 +15,8 @@ public class Mix extends Recipe {
 
     @Override
     public List<DrinkCommand> produce() {
-        // TODO: Mix drink
-        wrapped.produce();
-        return null;
+        List<DrinkCommand> commands =  wrapped.produce();
+        commands.add(new MixCommand());
+        return commands;
     }
 }

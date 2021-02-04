@@ -12,6 +12,9 @@ public class NearestStrategy implements MachineAllocationStrategy {
     @Override
     public Machine selectMachine(Coffee coffee) {
         ArrayList<Machine> machines = DatabaseService.getAllMachinesThatCanMake(coffee);
+
+        if (machines.isEmpty()) throw new NoMachinesFoundError("No machines available to produce a(n) " + coffee);
+
         // TODO: Complete
         return machines.get(0);
     }

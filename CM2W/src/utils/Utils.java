@@ -27,13 +27,14 @@ public class Utils {
             case "LARGE":
                 return Size.LARGE;
             default:
-                throw new Error("Invalid size \"" + s + "\"");
+                throw new InvalidSizeError("Invalid size \"" + s + "\"");
         }
     }
 
     public static MachineType getMachineType(String s) {
         switch (s.toUpperCase()) {
-            case "SIMPLE": case "BASIC":
+            case "SIMPLE":
+            case "BASIC":
                 return MachineType.SIMPLE;
             case "AUTOMATED":
                 return MachineType.AUTOMATED;
@@ -44,17 +45,16 @@ public class Utils {
         }
     }
 
-    public static void printError(int orderID) {
+    public static String getErrorMessage(int orderID) {
         switch (orderID) {
             case -1:
-                System.out.println("ERROR: Machine did not respond");
-                return;
+                return "ERROR: Machine did not respond";
             case -2:
-                System.out.println("ERROR: No machine could be found to fulfill this order");
-                return;
+                return "ERROR: No machine could be found to fulfill this order";
             case -3:
-                System.out.println("ERROR: CPS does not have any machine observers");
-                return;
+                return "ERROR: CPS does not have any machine observers";
+            default:
+                return "Unknown error number " + orderID;
         }
     }
 }

@@ -1,5 +1,5 @@
 package domain;
 
 public interface IncomingOrderObserver {
-    int receiveOrder(String coffeeName, Size size, String strategy);
+    int receiveOrder(Coffee coffee, String strategy);
 }

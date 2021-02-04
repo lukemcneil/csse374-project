@@ -13,8 +13,9 @@ public class RandomStrategy implements MachineAllocationStrategy {
     private static final String strategyName = "Random";
 
     @Override
-    public Machine selectMachine(Coffee coffee) {
-        ArrayList<Machine> machines = DatabaseService.getAllMachinesThatCanMake(coffee);
+    public Machine selectMachine(Coffee coffee) {ArrayList<Machine> machines = DatabaseService.getAllMachinesThatCanMake(coffee);
+
+        if (machines.isEmpty()) throw new NoMachinesFoundError("No machines available to produce a(n) " + coffee);
         System.out.printf("[RANDOM STRATEGY] Selecting a random machine from %d machines capable of making a %s\n", machines.size(), coffee);
 
         int selection = (int) (Math.random() * machines.size());

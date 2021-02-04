@@ -6,13 +6,10 @@ import domain.machine_commands.TopCommand;
 
 import java.util.List;
 
-public class Top extends Recipe {
-    private Recipe wrapped;
-    private Ingredient ingredient;
+public class Top extends Add {
 
-    public Top(Recipe wrapped, Ingredient ingredient) {
-        this.wrapped = wrapped;
-        this.ingredient = ingredient;
+    public Top(Recipe wrapped, Ingredient toTop, boolean isRequired) {
+        super(wrapped, toTop, isRequired);
     }
 
     @Override

@@ -2,15 +2,15 @@ package domain.machine_commands;
 
 import domain.Ingredient;
 
-public class AddIngredientCommand implements DrinkCommand{
-	private Ingredient ingredient;
+public class AddIngredientCommand implements DrinkCommand {
+    private final Ingredient ingredient;
 
-	public AddIngredientCommand(Ingredient ingredient) {
-		this.ingredient = ingredient;
-	}
+    public AddIngredientCommand(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
 
-	@Override
-	public String execute() {
-		return "[COMMAND] adding " + ingredient.toString() + " to drink";
-	}
+    @Override
+    public String execute() {
+        return "[COMMAND] adding " + ingredient.toString() + " to drink";
+    }
 }

@@ -1,25 +1,30 @@
 package data;
 
-import domain.Coffee;
-import domain.Machine;
-import domain.actions.Recipe;
-import testing.MachineThatCannotMakeCoffee;
-
-import javax.crypto.Mac;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+
+import domain.Coffee;
+import domain.Condiment;
+import domain.Ingredient;
+import domain.Machine;
+import domain.actions.*;
+import testing.MachineThatCannotMakeCoffee;
 
 import static utils.Utils.getMachineType;
 
 // SQLite usage based on example code at https://github.com/xerial/sqlite-jdbc
 
+/**
+ * Provides database access for the CPS system. Enables querying coffee, machine, and condiment information.
+ */
 public class DatabaseService {
-    //TODO: determine static vs instantiated DB Service, esp w/ regards to SQLite connection.
+    //TODO: Implement Singleton Design pattern.
     private static Connection connection = null;
 
+    /**
+     * Opens the database connection.
+     */
     public static void start() {
         try {
             if (connection == null)
@@ -29,6 +34,9 @@ public class DatabaseService {
         }
     }
 
+    /**
+     * Closes the database connection.
+     */
     public static void close() {
         try {
             if (connection != null)
@@ -39,34 +47,28 @@ public class DatabaseService {
     }
 
     /**
-     * (Will) Queries the database for all known coffee options.
-     * TODO: Point at DB; Complete.
+     * Queries the database for all known coffee options.
      * @return an ArrayList of all known coffees.
      */
     public static ArrayList<Coffee> getAllCoffees() {
         ArrayList<Coffee> coffees = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
             ResultSet drinkTypeRS = statement.executeQuery("SELECT DrinkName, Description FROM DrinkType");
-            while(drinkTypeRS.next())
-            {
+            while (drinkTypeRS.next()) {
                 Coffee coffee = new Coffee(
                         drinkTypeRS.getString("DrinkName"),
                         null,
                         drinkTypeRS.getString("Description"),
-                        null    // TODO: should ingredients remain separate from customizations? (ie should
-                                             //     we include ingredients in Coffee separately from customizations?
+                        null
                 );
 
                 coffees.add(coffee);
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
 
@@ -74,15 +76,14 @@ public class DatabaseService {
     }
 
     /**
-     * (Will) Queries the database for all machines and their info.
+     * Queries the database for all machines and their info.
+     *
      * @return an ArrayList of all machines & their details.
-     * TODO: Point at DB; Complete.
      */
     public static ArrayList<Machine> getAllMachines() {
         ArrayList<Machine> machines = new ArrayList<Machine>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
@@ -93,8 +94,7 @@ public class DatabaseService {
                             "ON MachineID = Coffeemaker " +
                             "JOIN Controller " +
                             "ON Controller = ControllerID");
-            while(machineRS.next())
-            {
+            while (machineRS.next()) {
                 Machine machine = new Machine(
                         machineRS.getInt("MachineID"),
                         getMachineType(machineRS.getString("Capability")),
@@ -104,9 +104,7 @@ public class DatabaseService {
 
                 machines.add(machine);
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
 
@@ -114,15 +112,14 @@ public class DatabaseService {
     }
 
     /**
-     * (Will) Queries the database for machines that are capable of making a specific coffee
+     * Queries the database for machines that are capable of making a specific coffee
+     *
      * @return an ArrayList of all machines & their details.
-     * TODO: Point at DB; Complete.
      */
     public static ArrayList<Machine> getAllMachinesThatCanMake(Coffee coffee) {
-        ArrayList<Machine> machines = new ArrayList<Machine>();
+        ArrayList<Machine> machines = new ArrayList<>();
 
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
@@ -136,8 +133,7 @@ public class DatabaseService {
                             "JOIN CoffeeMakerDrink CMD " +
                             "ON CM.MachineID = CMD.Coffeemaker " +
                             "WHERE CMD.Drinktype = '" + coffee.getName() + "'");   // TODO: Prepared statement (to avoid SQL injection)
-            while(machineRS.next())
-            {
+            while (machineRS.next()) {
                 Machine machine = new Machine(
                         machineRS.getInt("MachineID"),
                         getMachineType(machineRS.getString("Capability")),
@@ -147,19 +143,17 @@ public class DatabaseService {
 
                 machines.add(machine);
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
 
         return machines;
     }
 
+    //TODO: What does this method do? Do we need it?
     public static ArrayList<Machine> getAllMachinesThatCannotMakeCoffee() {
         ArrayList<Machine> machines = new ArrayList<Machine>();
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
@@ -170,8 +164,7 @@ public class DatabaseService {
                             "ON MachineID = Coffeemaker " +
                             "JOIN Controller " +
                             "ON Controller = ControllerID");
-            while(machineRS.next())
-            {
+            while (machineRS.next()) {
                 MachineThatCannotMakeCoffee machine = new MachineThatCannotMakeCoffee(
                         machineRS.getInt("MachineID"),
                         getMachineType(machineRS.getString("Capability")),
@@ -181,51 +174,109 @@ public class DatabaseService {
 
                 machines.add(machine);
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
         return machines;
     }
 
+    /**
+     * Factory Method to produce decorated Recipe object based on recipe stored in DB.
+     * @param coffeeName the name of the coffee to build a recipe for.
+     * @return the coffee's recipe, or null if no recipe exists (meaning a simple or automated machine may make the coffee).
+     */
     public static Recipe getRecipe(String coffeeName) {
         Recipe recipe = new Recipe();
-        try
-        {
+        try {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
             ResultSet recipeRS = statement.executeQuery(
-                    "SELECT  " +
-                            "FROM CoffeeMaker " +
-                            "JOIN CoffeeMakerCapability " +
-                            "ON MachineID = Coffeemaker " +
-                            "JOIN Controller " +
-                            "ON Controller = ControllerID");
-            while(machineRS.next())
-            {
-                MachineThatCannotMakeCoffee machine = new MachineThatCannotMakeCoffee(
-                        machineRS.getInt("MachineID"),
-                        getMachineType(machineRS.getString("Capability")),
-                        machineRS.getString("Street_Address") + ", " + machineRS.getString("ZIP_code"),
-                        machineRS.getString("Description")
-                );
+                    "SELECT IngredientName, IsRequired, Quantity, Step, Operation, Description " +
+                            "FROM DrinkRecipe " +
+                            "LEFT OUTER JOIN Ingredient " +
+                            "ON IngredientName = Name " +
+                            "WHERE DrinkName = '" + coffeeName + "' " +  // TODO: Prepared statement (to avoid SQL injection)
+                            "ORDER BY Step"
+            );
 
-                machines.add(machine);
+            // No Recipe, so return null.
+            if (!recipeRS.next()) {
+                return null;
             }
-        }
-        catch(SQLException e)
-        {
+
+            // Has Recipe, so Decorate
+            do {
+                String operation = recipeRS.getString("Operation");
+                switch (operation) {
+                    case "Add":
+                        recipe = new Add(
+                                recipe,
+                                new Ingredient(
+                                        recipeRS.getString("IngredientName"),
+                                        recipeRS.getString("Description"),
+                                        recipeRS.getInt("Quantity")
+                                ),
+                                1 == recipeRS.getInt("IsRequired"));
+                        break;
+                    case "Top":
+                        recipe = new Top(
+                                recipe,
+                                new Ingredient(
+                                    recipeRS.getString("IngredientName"),
+                                    recipeRS.getString("Description"),
+                                    recipeRS.getInt("Quantity")
+                                ),
+                                1 == recipeRS.getInt("IsRequired"));
+                        break;
+                    case "Mix":
+                        recipe = new Mix(recipe, 1 == recipeRS.getInt("IsRequired"));
+                        break;
+                    case "Steam":
+                        recipe = new Steam(
+                                recipe,
+                                new Ingredient(
+                                    recipeRS.getString("IngredientName"),
+                                    recipeRS.getString("Description"),
+                                    recipeRS.getInt("Quantity")
+                                ),
+                                1 == recipeRS.getInt("IsRequired"));
+                        break;
+                    default:
+                        throw new Error("Recipe Operation " + operation + " not recognized");
+                }
+            } while (recipeRS.next());
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        return machines;
 
-
-
-        if ()
-        return null;
+        return recipe;
     }
 
+    /**
+     * Returns all condiments available.
+     * @return a list of all available condiments.
+     */
+    public static List<Condiment> getAllCondiments() {
+        ArrayList<Condiment> condiments = new ArrayList<>();
 
+        try {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+            ResultSet condimentRS = statement.executeQuery(
+                    "SELECT Name, Description FROM Condiment");
+            while (condimentRS.next()) {
+                condiments.add(new Condiment(
+                        condimentRS.getString("Name"),
+                        condimentRS.getString("Description")
+                ));
+
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return condiments;
+    }
 }

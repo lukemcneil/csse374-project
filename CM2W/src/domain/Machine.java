@@ -1,6 +1,9 @@
 package domain;
 
 import data.MachineOrderService;
+import domain.machine_commands.DrinkCommand;
+
+import java.util.List;
 
 public class Machine {
     protected final int machineID;
@@ -26,12 +29,25 @@ public class Machine {
     }
 
     public String make(Coffee coffee) {
-        // TODO: Verify Machine can make specific coffee
+        if (!canMake(coffee)) {
+            throw new MachineTypeMismatchError(this.toString() + " cannot make " + coffee.toString());
+        }
+
+        List<DrinkCommand> commands = coffee.produce();
+
+        if (commands == null) {
+            System.out.println("Coffee has no recipe. Using basic machine mode.");
+        } else {
+            for (DrinkCommand command : commands) {
+                System.out.println(command.execute());
+            }
+        }
+
         return MachineOrderService.submitOrder(this, coffee);
     }
 
     public boolean canMake(Coffee coffee) {
-        return true;
+        return type == MachineType.PROGRAMMABLE || !coffee.hasCondiments();
     }
 
     public int getMachineID() {

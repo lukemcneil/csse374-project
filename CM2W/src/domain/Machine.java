@@ -47,7 +47,7 @@ public class Machine {
     }
 
     public boolean canMake(Coffee coffee) {
-        return type == MachineType.PROGRAMMABLE || !coffee.hasCondiments();
+        return (type == MachineType.PROGRAMMABLE || !coffee.offersCustomization());
     }
 
     public int getMachineID() {

@@ -52,7 +52,6 @@ public class Coffee {
             this.recipe = DatabaseService.getRecipe(name);
         }
 
-
         return recipe;
     }
 

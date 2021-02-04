@@ -1,6 +1,5 @@
 package domain.actions;
 
-import domain.machine_commands.AddIngredientCommand;
 import domain.machine_commands.DrinkCommand;
 import domain.machine_commands.SteamCommand;
 
@@ -9,7 +8,8 @@ import java.util.List;
 public class Steam extends Recipe {
     private Recipe wrapped;
 
-    public Steam() {
+    public Steam(Recipe wrapped) {
+        this.wrapped = wrapped;
     }
 
     @Override

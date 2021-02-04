@@ -16,4 +16,9 @@ public class Ingredient {
 	public String getDescription() {
 		return description;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

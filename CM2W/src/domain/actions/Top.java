@@ -1,7 +1,6 @@
 package domain.actions;
 
 import domain.Ingredient;
-import domain.machine_commands.AddIngredientCommand;
 import domain.machine_commands.DrinkCommand;
 import domain.machine_commands.TopCommand;
 
@@ -11,7 +10,8 @@ public class Top extends Recipe {
     private Recipe wrapped;
     private Ingredient ingredient;
 
-    public Top(Ingredient ingredient) {
+    public Top(Recipe wrapped, Ingredient ingredient) {
+        this.wrapped = wrapped;
         this.ingredient = ingredient;
     }
 

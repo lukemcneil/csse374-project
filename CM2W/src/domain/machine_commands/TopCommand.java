@@ -10,7 +10,7 @@ public class TopCommand implements DrinkCommand {
 	}
 
 	@Override
-	public void execute() {
-		System.out.println("[COMMAND] topping drink with " + topping.toString());
+	public String execute() {
+		return "[COMMAND] topping drink with " + topping.toString();
 	}
 }

@@ -10,8 +10,9 @@ public class AddIngredient extends Recipe {
     private Recipe wrapped;
     private Ingredient ingredient;
 
-    public AddIngredient(Ingredient ingredient) {
+    public AddIngredient(Recipe wrapped, Ingredient ingredient) {
         this.ingredient = ingredient;
+        this.wrapped = wrapped;
     }
 
     @Override

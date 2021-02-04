@@ -39,4 +39,12 @@ public class Coffee {
     public String toString() {
         return String.format("%s %s, with customizations: %s", size, name, Arrays.toString(addedCondiments));
     }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
 }

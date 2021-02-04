@@ -10,7 +10,7 @@ public class AddIngredientCommand implements DrinkCommand{
 	}
 
 	@Override
-	public void execute() {
-		System.out.println("[COMMAND] adding " + ingredient.toString() + " to drink");
+	public String execute() {
+		return "[COMMAND] adding " + ingredient.toString() + " to drink";
 	}
 }

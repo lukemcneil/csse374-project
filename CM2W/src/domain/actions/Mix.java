@@ -9,8 +9,8 @@ import java.util.List;
 public class Mix extends Recipe {
     private Recipe wrapped;
 
-    public Mix() {
-
+    public Mix(Recipe wrapped) {
+        this.wrapped = wrapped;
     }
 
     @Override

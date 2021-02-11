@@ -11,6 +11,7 @@ import domain.machine_commands.DrinkCommand;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -68,5 +69,25 @@ public class Tests {
             result += c.execute();
         }
         assertEquals("[COMMAND] inserting new cup[COMMAND] mixing drink[COMMAND] adding milk to drink[COMMAND] topping drink with whipped cream", result);
+    }
+
+    @Test
+    public void testFactory() {
+        Coffee coffee = new Coffee("Pumpkin Spice", Size.MEDIUM, "description", new ArrayList<>());
+        Recipe recipe = coffee.getRecipe(); // Factory Call inside of getRecipe
+        List<DrinkCommand> commmands = recipe.produce();
+        String result = "";
+        for (DrinkCommand c : commmands) {
+            result += c.execute();
+        }
+        assertEquals(
+                "[COMMAND] inserting new cup" +
+                "[COMMAND] adding Coffee to drink" +
+                "[COMMAND] adding Pumpkin Spice to drink" +
+                "[COMMAND] adding Cream to drink" +
+                "[COMMAND] mixing drink" +
+                "[COMMAND] topping drink with Nutmeg",
+                result
+        );
     }
 }

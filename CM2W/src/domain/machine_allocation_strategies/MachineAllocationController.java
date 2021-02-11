@@ -1,7 +1,8 @@
 package domain.machine_allocation_strategies;
 
-import testing.MachineThatCannotMakeCoffeeStrategy;
-import testing.NoMachineStrategy;
+
+import tests.MachineThatCannotMakeCoffeeStrategy;
+import tests.NoMachineStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;

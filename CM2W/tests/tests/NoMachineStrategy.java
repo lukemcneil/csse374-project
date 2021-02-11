@@ -1,4 +1,4 @@
-package testing;
+package tests;
 
 import domain.Coffee;
 import domain.Machine;

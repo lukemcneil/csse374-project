@@ -9,7 +9,7 @@ import domain.Condiment;
 import domain.Ingredient;
 import domain.Machine;
 import domain.actions.*;
-import testing.MachineThatCannotMakeCoffee;
+import tests.MachineThatCannotMakeCoffee;
 
 import static utils.Utils.getMachineType;
 

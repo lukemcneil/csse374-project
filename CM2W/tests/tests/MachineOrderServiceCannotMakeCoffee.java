@@ -1,11 +1,9 @@
-package testing;
+package tests;
 
 import domain.Coffee;
 import domain.Controller;
 import domain.Machine;
 import domain.MachineType;
-
-import java.util.Arrays;
 
 /**
  * Responsible for submitting orders to machines (by passing them to the controller in the appropriate format.
